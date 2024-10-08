@@ -24,3 +24,15 @@ html,body{
     width: 6rem;
     background-color: brown;
 }
+
+.cell:disabled {
+    cursor: not-allowed; /* or default */
+    opacity: 10;
+    pointer-events: none;
+
+}
+
+.clicked {
+    pointer-events: none; /* Makes the button non-clickable */
+    cursor: default; /* Keeps the cursor normal */
+}
