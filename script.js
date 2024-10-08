@@ -15,11 +15,6 @@ return board;
 })();
 
 
-// draw the board to console
-const drawBoard = (function (){
-
-})(); // may need to remove the () later
-
 
 //game controller
 const gameContoller = (function (){
@@ -31,21 +26,36 @@ player2.symbol="O";
 let moves =0;
 
 console.log(gameboard);
-
-while(moves < 6){ //9
- let currentPlayer = isPlayer1? player1 : player2;
- let choice = prompt(currentPlayer.name + " please choose position (row,col)");
- let input = choice.split(",");
-gameboard[input[0]][input[1]] = currentPlayer.symbol;
-checkWinner(currentPlayer);
+cells = document.querySelectorAll(".cell");
 
 
-isPlayer1 = !isPlayer1;
-moves++;
 
-}
 
-console.log(gameboard);
+ 
+// let choice = prompt(currentPlayer.name + " please choose position (row,col)");
+ //let input = choice.split(",");
+//gameboard[input[0]][input[1]] = currentPlayer.symbol;
+//checkWinner(currentPlayer);
+
+
+cells.forEach(cell => {
+    cell.addEventListener("click", function(){
+        let currentPlayer = isPlayer1? player1 : player2;
+        cell.textContent=currentPlayer.symbol;
+        checkWinner(currentPlayer);
+
+        isPlayer1 = !isPlayer1;
+        moves++;
+       
+        console.log(moves);
+
+    });
+});
+
+
+
+
+//console.log(gameboard);
 
 })();
 
@@ -60,6 +70,45 @@ function createPlayer(){
     playerName = prompt("Enter player's name");
     return new Player(playerName);
 }
+
+
+
+    function checkWinner(currentPlayer){
+        symbol = currentPlayer.symbol;
+        let name = currentPlayer.name;
+
+        const winningCombinations = [
+       
+            // Rows
+            ["cell-00", "cell-01", "cell-02"],
+            ["cell-10", "cell-11", "cell-12"],
+            ["cell-20", "cell-21", "cell-22"],
+            // Columns
+            ["cell-00", "cell-10", "cell-20"],
+            ["cell-01", "cell-11", "cell-21"],
+            ["cell-02", "cell-12", "cell-22"],
+            // Diagonals
+            ["cell-00", "cell-11", "cell-22"],
+            ["cell-02", "cell-11", "cell-20"]
+        ];
+
+        for(x of winningCombinations){
+            if(
+                document.getElementById(x[0]).textContent==symbol &&
+                document.getElementById(x[1]).textContent==symbol &&
+                document.getElementById(x[2]).textContent==symbol
+            ){
+                alert(name + " wins!")
+            }
+        }
+
+
+    }
+
+  
+
+
+/*
 
 function checkWinner(currentPlayer){
     symbol = currentPlayer.symbol;
@@ -97,3 +146,5 @@ if(gameboard[0][2] == symbol && gameboard[1][1] == symbol && gameboard[2][0] == 
 }
 
 } 
+
+*/
