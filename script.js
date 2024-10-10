@@ -1,27 +1,40 @@
 //TODO
 // RESET BUTTON
-// document that keeps score of game
 
-cells = document.querySelectorAll(".cell");
+
+let moves =0; // keeps track of how many moves made
+const cells = document.querySelectorAll(".cell");
+const modal = document.querySelector("#modal");
+const winnerModal = document.querySelector("#winner-modal");
+modal.showModal();
 const startButton = document.querySelector('#start');
+const restartButton = document.querySelector('#restart');
+const winnerDisplay = document.querySelector("#winner-display");
 
 startButton.addEventListener("click", function(){
-startGame();
+    p1box = document.querySelector("#player1Box");
+    p2box = document.querySelector("#player2Box");
+    if(p1box.value.trim() != "" && p2box.value.trim() !=""){
+        startGame();
+        modal.close();
+        
+    }else{
+        alert("Please enter in player names")
+    }
 });
 
 function startGame(){    
-    const player1Name = document.querySelector('#player1').value;
-    const player2Name = document.querySelector('#player2').value;
+    const player1Name = document.querySelector('#player1Box').value;
+    const player2Name = document.querySelector('#player2Box').value;
      const  p1 = createPlayer(player1Name, "X");
      const p2 = createPlayer(player2Name, "O");
+     keepScore(p1,p2);
      gameController(p1, p2);
-   
   }
 
 //game controller
 function gameController(player1, player2){
 let isPlayer1 = true;
-let moves =0;
 
 cells.forEach(cell => {
     cell.addEventListener("click", function(){
@@ -29,9 +42,15 @@ cells.forEach(cell => {
         cell.textContent=currentPlayer.symbol;
         cell.classList.add('clicked'); // add class to make button disabled. 'cell.disable = true' was greying out button text 
         checkWinner(currentPlayer);
+        keepScore(player1, player2);
+        moves++;
+        // no winner at the end of the game then draw
+        if(moves == 9 && checkWinner(player1,player2) == false){
+            winnerDisplay.innerHTML= "It's a draw!";
+        }
 
         isPlayer1 = !isPlayer1;
-        moves++;
+       
         console.log(moves);
 
     });
@@ -43,6 +62,7 @@ cells.forEach(cell => {
 function Player(name, symbol) {
     this.name = name;
     this.symbol = symbol;
+    this.score= 0;
   }
 
 
@@ -56,9 +76,10 @@ function createPlayer(name, symbol){
     function checkWinner(currentPlayer){
         symbol = currentPlayer.symbol;
         let name = currentPlayer.name;
-
+        let winner = false; // return if there is a winner
+        const winnerDisplay = document.querySelector("#winner-display");
+         
         const winningCombinations = [
-       
             // Rows
             ["cell-00", "cell-01", "cell-02"],
             ["cell-10", "cell-11", "cell-12"],
@@ -80,15 +101,39 @@ function createPlayer(name, symbol){
                 document.getElementById(x[1]).textContent==symbol &&
                 document.getElementById(x[2]).textContent==symbol
             ){
-                // but in text to DOM
-                alert(name + " wins!")
+                // put in text to DOM
+                winnerModal.showModal();
+                winnerDisplay.innerHTML = name + " wins!";
+                winner=true;
                 cells.forEach(cell => {
-                    cell.disabled=true;
+                    // clicked class cannot be clicked again
+                    cell.classList.add('clicked'); 
                 });
-
+                currentPlayer.score++;
             }
         }
-
-
+        return winner;
     }
 
+    // prints score to page
+    function keepScore(player1, player2){   
+        score = document.querySelector(".score");
+        score.innerHTML = player1.name + ": " + player1.score +" "+ player2.name + ": " + player2.score;
+    }
+
+
+    //restarts the game
+    restartButton.addEventListener("click", function(){
+        // reset all buttons(cells)
+        cells.forEach(cell => {
+            cell.textContent="";
+            cell.classList.remove('clicked');  // remove the class so css does not make the button unclickable
+        });
+        winnerModal.close();
+        // reset number of moves to 0
+        moves =0;
+        // restart gameController
+        gameController(p1, p2);
+    });
+
+ 
