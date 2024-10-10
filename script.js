@@ -1,28 +1,26 @@
-//TODO
-// RESET BUTTON
-
-
+//variables
 let moves =0; // keeps track of how many moves made
-const cells = document.querySelectorAll(".cell");
-const modal = document.querySelector("#modal");
-const winnerModal = document.querySelector("#winner-modal");
-modal.showModal();
-const startButton = document.querySelector('#start');
-const restartButton = document.querySelector('#restart');
-const winnerDisplay = document.querySelector("#winner-display");
+const cells = document.querySelectorAll(".cell"); // game buttons
+const modal = document.querySelector("#modal"); // modal used to set player names
+const winnerModal = document.querySelector("#winner-modal");//modal used to show the winner
+modal.showModal();// start modal start of game
+const startButton = document.querySelector('#start'); // start button for modal
+const restartButton = document.querySelector('#restart'); // restart button for winnerModal
+const winnerDisplay = document.querySelector("#winner-display");//display div for winnerModal
 
+//button clicked after players input their names in the modal
 startButton.addEventListener("click", function(){
     p1box = document.querySelector("#player1Box");
     p2box = document.querySelector("#player2Box");
     if(p1box.value.trim() != "" && p2box.value.trim() !=""){
         startGame();
         modal.close();
-        
     }else{
         alert("Please enter in player names")
     }
 });
 
+//create the players and starts, shows the initial score/playerNames and start the gameController
 function startGame(){    
     const player1Name = document.querySelector('#player1Box').value;
     const player2Name = document.querySelector('#player2Box').value;
@@ -36,44 +34,40 @@ function startGame(){
 function gameController(player1, player2){
 let isPlayer1 = true;
 
+//when a button is clicked, add to clicked class, display currentPlayers symbols, check for winner, update score and change player
 cells.forEach(cell => {
     cell.addEventListener("click", function(){
         let currentPlayer = isPlayer1? player1 : player2;
         cell.textContent=currentPlayer.symbol;
-        cell.classList.add('clicked'); // add class to make button disabled. 'cell.disable = true' was greying out button text 
+        cell.classList.add('clicked'); // add class to make button disabled.
         checkWinner(currentPlayer);
         keepScore(player1, player2);
         moves++;
-        // no winner at the end of the game then draw
+        // // if 9 moves and no winner - show draw
         if(moves == 9 && checkWinner(player1,player2) == false){
             winnerModal.showModal();
             winnerDisplay.innerHTML= "It's a draw!";
         }
-
-        isPlayer1 = !isPlayer1;
-       
-        console.log(moves);
-
+        //change player
+        isPlayer1 = !isPlayer1;   
     });
 });
-
 };
 
-
+//player class
 function Player(name, symbol) {
     this.name = name;
     this.symbol = symbol;
     this.score= 0;
   }
 
-
+//returns a player
 function createPlayer(name, symbol){
-
     return new Player(name, symbol);
 }
 
 
-
+// checks if we have a winner and shows winner on winner-modal
     function checkWinner(currentPlayer){
         symbol = currentPlayer.symbol;
         let name = currentPlayer.name;
