@@ -46,6 +46,7 @@ cells.forEach(cell => {
         moves++;
         // no winner at the end of the game then draw
         if(moves == 9 && checkWinner(player1,player2) == false){
+            winnerModal.showModal();
             winnerDisplay.innerHTML= "It's a draw!";
         }
 
@@ -77,7 +78,7 @@ function createPlayer(name, symbol){
         symbol = currentPlayer.symbol;
         let name = currentPlayer.name;
         let winner = false; // return if there is a winner
-        const winnerDisplay = document.querySelector("#winner-display");
+       
          
         const winningCombinations = [
             // Rows

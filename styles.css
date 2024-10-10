@@ -40,6 +40,7 @@ html,body{
     height: 14rem;
     width: 14rem;
     background-color: rgb(167, 18, 55);
+    color: blue;
     font-size: 10em;
     font-weight: 900;
 }
@@ -88,6 +89,7 @@ input{
     height: 100%;
     font-size: 4rem;
     font-family: 'Silkscreen', sans-serif;
+    color: blue;
 }
 
 #start{
